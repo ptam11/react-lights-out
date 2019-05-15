@@ -57,7 +57,7 @@ class Board extends Component {
     for (let y = 0; y < nrows; y++) {
       let row = Array.from({ length: ncols }, () => {
         let on = Math.random() < .50 ? true : false;
-        return {isLit: on}
+        return { isLit: on }
       });
       board.push(row)
     }
@@ -65,13 +65,13 @@ class Board extends Component {
     return board
   }
 
-  
+
 
   /** Internal method to copy a board and then flip the approiate cells **/
 
   _flipCellsAround(b, y, x) {
     let { ncols, nrows } = this.props;
-    console.log({b, y, x})
+    console.log({ b, y, x })
     // Make a copy of the board so that state is not changed outside of setState
     let board = b.map(r => [...r]);
 
@@ -81,12 +81,12 @@ class Board extends Component {
         board[y][x].isLit = !board[y][x].isLit;
       }
     }
-    
-    flipCell(y+1, x)
-    flipCell(y-1, x)
+
+    flipCell(y + 1, x)
+    flipCell(y - 1, x)
     flipCell(y, x)
-    flipCell(y, x+1)
-    flipCell(y, x-1)
+    flipCell(y, x + 1)
+    flipCell(y, x - 1)
 
     // TODO: Flip all of the cells around the cell at y, x
 
@@ -115,38 +115,37 @@ class Board extends Component {
     // let table = this.state.boxes.map(b => (
     //   <Cell isLit={b.isLit} flipCellsAroundMe={this._flipCellsAround}/>
     // ))
-    const {ncols, nrows} = this.props;
+    const { ncols, nrows } = this.props;
     const { boxes } = this.state;
     let boxesArr = [];
     for (let y = 0; y < nrows; y++) {
       let arr = []
-      for(let x = 0; x < ncols; x++) {
+      for (let x = 0; x < ncols; x++) {
         let currBox = boxes[y][x];
-        arr.push(<Cell x={x} y={y} key={uuid()} flipCellsAroundMe={this.flipCellsAndCheckForWin} isLit={currBox.isLit}/>)
+        arr.push(<Cell x={x} y={y} key={uuid()} flipCellsAroundMe={this.flipCellsAndCheckForWin} isLit={currBox.isLit} />)
       }
       boxesArr.push(arr)
     }
 
-    
+
     // if the game is won, just show a winning msg & render nothing else
-    
+
     // TODO
     // make table board
-    return (
+    return this.state.hasWon ? "You have won" : (
       <table className="Board">
         <tbody>
-        {boxesArr.map(row => {
-          return (
-            <tr key={uuid()}>
-              {row}
-            </tr>
-          )
-        })}
+          {boxesArr.map(row => {
+            return (
+              <tr key={uuid()}>
+                {row}
+              </tr>
+            )
+          })}
         </tbody>
-      </table>
-    )
-    // TODO
+      </table>)
   }
+  // TODO
 }
 
 
