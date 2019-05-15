@@ -1,6 +1,7 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Cell from "./Cell";
 import './Board.css';
+import uuid from 'uuid/v4';
 
 
 /** Game board of Lights out.
@@ -30,25 +31,46 @@ import './Board.css';
  **/
 
 class Board extends Component {
-
   constructor(props) {
     super(props);
-
+    this.state = {
+      boxes: this._createBoard(),
+      hasWon: false
+    }
+    this._createBoard = this._createBoard.bind(this);
+    this._flipCellsAround = this._flipCellsAround.bind(this);
     // TODO: set initial state
   }
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
 
+  static defaultProps = {
+    nrows: 5,
+    ncols: 5
+  }
+
   _createBoard() {
     let board = [];
     // TODO: create array-of-arrays of true/false values
+    const { nrows, ncols } = this.props;
+    for (let y = 0; y < nrows; y++) {
+      let row = Array.from({ length: ncols }, () => {
+        let on = Math.random() < .50 ? true : false;
+        return {isLit: on}
+      });
+      board.push(row)
+    }
+
+    
     return board
   }
+
+  
 
   /** Internal method to copy a board and then flip the approiate cells **/
 
   _flipCellsAround(b, y, x) {
-    let {ncols, nrows} = this.props;
+    let { ncols, nrows } = this.props;
     // Make a copy of the board so that state is not changed outside of setState
     let board = b.map(r => [...r]);
 
@@ -74,20 +96,47 @@ class Board extends Component {
     // TODO: determine is the game has been won
     // let hasWon = ... your code here.
 
-    this.setState({board, hasWon});
+    // this.setState({ board, hasWon });
   }
 
 
   /** Render game board or winning message. */
 
   render() {
+    // let table = this.state.boxes.map(b => (
+    //   <Cell isLit={b.isLit} flipCellsAroundMe={this._flipCellsAround}/>
+    // ))
+    const {ncols, nrows} = this.props;
+    const { boxes } = this.state;
+    let boxesArr = [];
+    for (let y = 0; y < nrows; y++) {
+      let arr = []
+      for(let x = 0; x < ncols; x++) {
+        let currBox = boxes[y][x];
+        arr.push(<Cell key={uuid()} flipCellsAroundMe={this._flipCellsAround} isLit={currBox.isLit}/>)
+      }
+      boxesArr.push(arr)
+    }
 
+    
     // if the game is won, just show a winning msg & render nothing else
-
+    
     // TODO
-
+    console.log(this.state.boxes)
     // make table board
-
+    return (
+      <table className="Board">
+        <tbody>
+        {boxesArr.map(row => {
+          return (
+            <tr key={uuid()}>
+              {row}
+            </tr>
+          )
+        })}
+        </tbody>
+      </table>
+    )
     // TODO
   }
 }
