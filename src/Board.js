@@ -132,7 +132,7 @@ class Board extends Component {
 
     // TODO
     // make table board
-    return this.state.hasWon ? "You have won" : (
+    return this.state.hasWon ? <div>"You have won" </div>: (
       <table className="Board">
         <tbody>
           {boxesArr.map(row => {
